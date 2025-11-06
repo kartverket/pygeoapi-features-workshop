@@ -18,7 +18,7 @@ services:
     # volumes:
     #  - ./config.yml:/pygeoapi/local.config.yml    # Her spesifiserer vi at filen config.yml i denne mappen skal importeres inn i containeren
     restart: unless-stopped```            # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
-
+```
 
 ## 2.2 På tide å kjøre API'et!
 Containeren med pygeoapi kan nå enkelt kjøres opp ved å skrive følgende kommando inn i terminalen:
