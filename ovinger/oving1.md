@@ -40,9 +40,9 @@ Du skal da få opp en side nettside som viser pygeoapi sin "html-visning". 🎉
 Klikk deg gjerne litt rundt!
 
 <details>
-    <summary>Ser det bra ut?</summary>
-    Eller har du kanskje spørsmål som
-    Hvem er Tom Kradis? Og hvorfor er det så mye rar informasjon og data her? 
-    
-    Gå til [neste øving](oving2.md) så fikser vi det. 😃
+<summary>Ser det bra ut?</summary>
+Eller har du kanskje spørsmål som
+Hvem er Tom Kradis? Og hvorfor er det så mye rar informasjon og data her? 
+
+Gå til [neste øving](oving2.md) så fikser vi det. 😃
 </details>
