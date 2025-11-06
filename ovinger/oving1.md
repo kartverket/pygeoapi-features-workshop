@@ -11,19 +11,21 @@ Kopier dette inn i filen:
 
 services:
   geoserver:
-    image: geopython/pygeoapi:latest    # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi              # valgfritt, men det er fint å sette eget container navn
+    image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
+    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
     ports:
-      - "5000:5000"                       # Her 'mappes' port 5000 i containeren med port 5000 på pc'en din
+      - "5000:5000"                                 # Her 'mappes' port 5000 i containeren med port 5000 på pc'en din
     # volumes:
     #  - ./config.yml:/pygeoapi/local.config.yml    # Her spesifiserer vi at filen config.yml i denne mappen skal importeres inn i containeren
-    restart: unless-stopped```            # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+    restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
 ```
 
 ## 2.2 På tide å kjøre API'et!
 Containeren med pygeoapi kan nå enkelt kjøres opp ved å skrive følgende kommando inn i terminalen:
 
-```docker compose up -d``` # Kommandoen vil her hente ned image og bygge container. '-d' står for detatch. Uten denne vil prosessen leve i terminalen man kjørte kommandoen fra. 
+```docker compose up -d``` 
+
+Kommandoen vil her hente ned image og bygge en container som kjører apiet. '-d' står for detatch. Uten denne vil prosessen leve i terminalen man kjørte kommandoen fra. 
 
 
 ## 2.3 Nå kan vi sjekke om det her funka! 
@@ -41,5 +43,6 @@ Klikk deg gjerne litt rundt!
     <summary>Ser det bra ut?</summary>
     Eller har du kanskje spørsmål som
     Hvem er Tom Kradis? Og hvorfor er det så mye rar informasjon og data her? 
-    Gå til [neste øving](oving2.md), så fikser vi det. 😃
+    
+    Gå til [neste øving](oving2.md) så fikser vi det. 😃
 </details>
