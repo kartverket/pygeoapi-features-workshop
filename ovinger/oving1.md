@@ -10,7 +10,7 @@ Kopier dette inn i filen:
 ```
 
 services:
-  geoserver:
+  pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
     container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
     ports:
