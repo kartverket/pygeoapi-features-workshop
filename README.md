@@ -18,9 +18,7 @@ Trykk på den grønne "<> Code" knappen. Nederst i nedtrekksmenyen; trykk på "D
 Unzip så mappen til ønsket plassering. Det er helt ok å bare ha det i "Nedlastninger"-mappen.
 
 
-Vi anbefaler å bruke git dersom du har dette satt opp på pc'en din. 
-
-I mappen dere nå har 
+Vi anbefaler å bruke git dersom du har det installert på pc'en din. 
 
 
 For å starte, klikk deg inn på øving 1. 
