@@ -3,5 +3,5 @@ Pygeoapi trenger å vite hvor den skal lete etter data. I forrige øving kjørte
 
 
 ## Opprett konfigurasjonsfil for pygeoapi
-
+Konfigurasjonsfilen for pygeoapi
 
