@@ -32,7 +32,8 @@ Steg 2:
 Utvid pygeoapi med "environment" som inneholder oppkoblingsparametere til databasen. 
 Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
 
-```    environment:
+```yml
+    environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwer1234

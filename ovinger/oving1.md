@@ -7,8 +7,7 @@ I denne øvingen skal vi bruke docker compose for å kjøre pygeoapi sitt image 
 Denne filen skal spesifisere hvordan pygeoapi skal kjøres. 
 Kopier dette inn i filen:
 
-```
-
+```yml
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
