@@ -15,7 +15,7 @@ Vi må kjøre opp og spesifisere hvilken database vi skal bruke. Det går i to s
 Steg 1, definer databasecontainer:
 Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
 
-```  
+```yml  
 postgis:
   build:
     context: ./postgis # Sti til postgismappen som inneholder en Dockerfile

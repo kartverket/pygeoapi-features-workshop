@@ -7,6 +7,9 @@ services:
     volumes:
      - ./config.yml:/pygeoapi/local.config.yml    # Her spesifiserer vi at filen config.yml i denne mappen skal importeres inn i containeren
     restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+    depends_on:
+        postgis:
+          condition: service_healthy
     environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres
@@ -23,3 +26,8 @@ services:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwer1234
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 5s
+        timeout: 5s
+        retries: 10

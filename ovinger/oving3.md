@@ -37,4 +37,4 @@ Kjør så kommandoen ```docker compose restart``` for å restarte pygeoapi. Ev. 
 
 > 💡 **Tips:** Inspiser docker desktop eller skriv kommandoen ```docker ps``` for oversikt over kjørende containere
 
-Du kan nå åpne åpne ```localhost:5000``` i nettleseren igjen og se om det har skjedd noe. 
+Du kan nå åpne åpne ```localhost:5000``` i nettleseren igjen og se om det har skjedd noe.

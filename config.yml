@@ -27,13 +27,14 @@ metadata:
     description:
       en: Datasettet inneholder administrative grenser og områder for Norge, inkludert fylker og kommuner.
     keywords:
-      - Fylke
-      - Kommune
-      - Administrativ inndeling
-      - Administrative grenser
-      - Fylkesgrenser
-      - Kommunegrenser
-      - Riksgrense
+      en:
+        - Fylke
+        - Kommune
+        - Administrativ inndeling
+        - Administrative grenser
+        - Fylkesgrenser
+        - Kommunegrenser
+        - Riksgrense
     keywords_type: theme
     terms_of_service: https://www.kartverket.no/geodataarbeid/norge-digitalt/partsinformasjon/avtaler-og-vilkar/norge-digitalt-lisens
     url: https://www.kartverket.no
