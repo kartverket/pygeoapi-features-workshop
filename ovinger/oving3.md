@@ -2,7 +2,7 @@
 Pygeoapi trenger å vite hvor den skal lete etter data. I forrige øving kjørte vi opp en database, men vi "glemte" å konfiguere pygeoapi til å bruke disse dataene. Det skal vi fikse nå.
 
 
-## Benytt egen konfigurasjonsfil for pygeoapi
+## 3.1 Benytt egen konfigurasjonsfil for pygeoapi
 Konfigurasjonsfilen styrer en del ting som metadata og koblig til datakilde.
 Det blir fort litt mye å fylle ut og vi har derfor laget en ferdig utfyllt config-fil i mappen "config".
 Ta gjerne en titt i filen og spesielt det som er under "resources". Her spesifiserer vi datasettene våre, som i dette tilfellet er kommuner og fylker.

@@ -9,7 +9,7 @@ Vi har lastet ned datasettet som en "postgis dump" fra geonorge.no lagt til opps
 Dette opsettet ligger under mappen 'postgis'. Gå videre til neste steg for å ta det i bruk. 
 
 
-## 1.1 Utvid docker-compose filen
+## 2.1 Utvid docker-compose filen
 Vi må kjøre opp og spesifisere hvilken database vi skal bruke. Det går i to steg. 
 
 Steg 1, definer databasecontainer:
@@ -47,7 +47,7 @@ Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
 ```
 
 
-## 1.2 Kjør docker compose up -d på nytt
+## 2.2 Kjør docker compose up -d på nytt
 
 Finner du fylker og kommuner under [collections](http://localhost:5000/collections?f=html)?
 I så fall er du flinkere enn oss. 🙂
