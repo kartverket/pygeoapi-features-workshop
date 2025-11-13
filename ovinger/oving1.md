@@ -26,19 +26,7 @@ Containeren med pygeoapi kan nå enkelt kjøres opp ved å skrive følgende komm
 
 Kommandoen vil her hente ned image og bygge en container som kjører apiet. '-d' står for detatch. Uten denne vil prosessen leve i terminalen man kjørte kommandoen fra. 
 
-
-## 1.3 Nå kan vi sjekke om det her funka! 
-Om du vil ha en grafisk oversikt over containeren din hvor du kan se om den kjører, inspisere logger osv. kan du nå åpne programmet "docker desktop" dersom du har dette installert. Ta gjerne en titt!
-
-Men det vi egentlig skal er å åpne en ny fane i favorittbrowseren din og skrive inn url'el:
-
-```localhost:5000```
-
-Du skal da få opp en side nettside som viser pygeoapi sin "html-visning". 🎉
-
-Klikk deg gjerne litt rundt!
-
-## 1.4 Nyttige kommandoer
+## 1.3 Nyttige kommandoer
 
 * `docker-compose up -d` starter containerne i docker-compose fila og bygger den dersom den ikke er bygget før
 * `docker-compose up -d --build` starter containerne i docker-compose fila og bygger ny container. (Man trenger --build dersom man har gjort endringer på sevlve imaget, eks. endringer i en Dockerfile)
@@ -49,11 +37,19 @@ Klikk deg gjerne litt rundt!
 
 Du kan også teste ut 'docker-compose up" uten å angi '-d'. Bruk ctrl-c for å avslutte.
 
+## 1.4 Nå kan vi sjekke om det her funka! 
+Om du vil ha en grafisk oversikt over containeren din hvor du kan se om den kjører, inspisere logger osv. kan du nå åpne programmet "docker desktop" dersom du har dette installert. Ta gjerne en titt!
 
-<details>
-<summary>Ser det bra ut?</summary>
-Eller har du kanskje spørsmål som
-Hvem er Tom Kradis? Og hvorfor er det så mye rar informasjon og data her? 
+Men det vi egentlig skal er å åpne en ny fane i favorittbrowseren din og skrive inn url'el:
+
+```localhost:5000```
+
+Du skal da få opp en side nettside som viser pygeoapi sin "html-visning". 🎉
+
+Klikk deg gjerne litt rundt!
+
+## 1.5 Hva nå?
+Ser det bra ut?  
+Eller har du kanskje spørsmål som "Hvem er Tom Kralidis?" og "Hvorfor er det så mye rar informasjon og data her?" 
 
 Gå til [neste øving](oving2.md) så fikser vi det. 😃
-</details>

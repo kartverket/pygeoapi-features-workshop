@@ -49,9 +49,7 @@ Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
 
 ## 1.2 Kjør docker compose up -d på nytt
 
-<details>
-<summary>Finner du fylker og kommuner under [collections](http://localhost:5000/collections?f=html)?</summary>
+Finner du fylker og kommuner under [collections](http://localhost:5000/collections?f=html)?
 I så fall er du flinkere enn oss. 🙂
 
 Gå til [neste øving](oving3.md) så ser vi hvordan vi får pygeoapi til å faktisk bruke disse dataene.
-</details>

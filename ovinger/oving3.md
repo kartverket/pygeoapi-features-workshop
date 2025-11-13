@@ -5,7 +5,7 @@ Pygeoapi trenger å vite hvor den skal lete etter data. I forrige øving kjørte
 ## Benytt egen konfigurasjonsfil for pygeoapi
 Konfigurasjonsfilen styrer en del ting som metadata og koblig til datakilde.
 Det blir fort litt mye å fylle ut og vi har derfor laget en ferdig utfyllt config-fil i mappen "config".
-Ta gjerne en titt i filen og spesielt det som er under "resourses". Her spesifiserer vi datasettene våre, som i dette tilfellet er kommuner og fylker.
+Ta gjerne en titt i filen og spesielt det som er under "resources". Her spesifiserer vi datasettene våre, som i dette tilfellet er kommuner og fylker.
 
 For å ta denne configfilen i bruk, så mounter vi den inn i pygeoapi-containeren på container-stien: /pygeoapi/local.config.yml
 
@@ -33,7 +33,7 @@ Her  -->  - ./config.yml:/pygeoapi/local.config.yml      # Her spesifiserer vi a
 ```
 
 
-Kjør så kommandoen ```docker compose restart``` for å restarte pygeoapi. Ev. kjør dersom containere ikke allerede kjøre ```docker compose up -d```
+Kjør så kommandoen ```docker compose restart``` for å restarte pygeoapi. Ev. kjør ```docker compose up -d``` dersom containere ikke allerede kjører 
 
 > 💡 **Tips:** Inspiser docker desktop eller skriv kommandoen ```docker ps``` for oversikt over kjørende containere
 
