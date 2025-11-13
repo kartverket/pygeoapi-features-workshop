@@ -25,6 +25,11 @@ postgis:
     - DB_NAME=administrative_enheter
     - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=qwer1234
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U postgres"]
+    interval: 5s
+    timeout: 5s
+    retries: 10
 ```
 Obs! Her er det viktig at det ikke er noe mellomrom før "postgis" etter innliming. Det skal være like mange mellomrom foran denne som foran "pygeoapi" (som står nest øverst i filen) 
 
