@@ -1,18 +1,18 @@
 # Øving 2
-I denne øvingen skal vi faktisk legge til data våre egne data og sette opp konfigurasjonsfilen for pygeoapi. 
-Vi har valgt å bruke datasettet 'Administrative enheter" som kan lastes ned på geonorge. Pygeoapi kan bruke diverse filer som kildedata, men som oftest benytter man en databaseserver. 
-
+I denne øvingen skal vi faktisk legge til våre egne data og sette opp konfigurasjonsfilen for pygeoapi. 
+Vi har valgt å bruke datasettet 'Administrative enheter" som kan lastes ned på geonorge. 
 
 Her hjelper vi dere litt.. 
-Vi har lastet ned datasettet som en "postgis dump" fra geonorge.no lagt til oppsett for å flytte dataene inn i en postgis database. 
+Vi har lastet ned datasettet som en "postgis dump" fra geonorge.no lagt til oppsett for å flytte dataene inn i en postgis database. Pygeoapi kan bruke diverse filer som kildedata (eks. esri fgdb), men som oftest benytter man en databaseserver.
 
-Dette opsettet ligger under mappen 'postgis'. Gå videre til neste steg for å ta det i bruk. 
+Dataene og opsettet for å få disse inn i en docker container ligger under mappen 'postgis'. 
 
+Gå videre til neste steg for å ta det i bruk. 
 
-## 2.1 Utvid docker-compose filen
-Vi må kjøre opp og spesifisere hvilken database vi skal bruke. Det går i to steg. 
+## 2.1 Utvid docker-compose filen med vår en database som en service
+Vi skal nå kjøre opp vår egen database og spesifisere hvilken database vi skal bruke og vi pygeoapi muligheten til å koble seg til denne. Det går i to steg. 
 
-Steg 1, definer databasecontainer:
+Steg 1, definer database service som vil:
 Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
 
 ```yml  
@@ -45,11 +45,13 @@ Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
       - POSTGRES_HOST=postgis
       - POSTGRES_DB=administrative_enheter
 ```
-
+Dette er miljøvariabler som vi gir til pygeoapi-containeren. De inneholder oppkoblingsparametere til databasen.Og fanges automatisk opp av pygeoapi.
 
 ## 2.2 Kjør docker compose up -d på nytt
 
 Finner du fylker og kommuner under [collections](http://localhost:5000/collections?f=html)?
 I så fall er du flinkere enn oss. 🙂
+Vi har gitt pygeoapi-containeren _tilgang_ til databasen, men vi har enda ikke bedt den om å bruke disse dataene. 
+Dette må vi gjøre med en pygeoapi konfigurasjonsfil.
 
 Gå til [neste øving](oving3.md) så ser vi hvordan vi får pygeoapi til å faktisk bruke disse dataene.

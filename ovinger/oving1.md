@@ -20,24 +20,23 @@ services:
 ```
 
 ## 1.2 På tide å kjøre API'et!
+Dette er faktisk alt vi trenger for å få opp _noe_. 
+
 Containeren med pygeoapi kan nå enkelt kjøres opp ved å skrive følgende kommando inn i terminalen:
 
-```docker compose up -d```
+```
+docker compose up -d
+```
 
 Kommandoen vil her hente ned image og bygge en container som kjører apiet. '-d' står for detatch. Uten denne vil prosessen leve i terminalen man kjørte kommandoen fra. 
 
-## 1.3 Nyttige kommandoer
+For å se at du har en container kjørende, skriv gjerne inn:
+```docker ps``` i terminalen og se hva det står under status. ("Up" er bra)
 
-* `docker-compose up -d` starter containerne i docker-compose fila og bygger den dersom den ikke er bygget før
-* `docker-compose up -d --build` starter containerne i docker-compose fila og bygger ny container. (Man trenger --build dersom man har gjort endringer på sevlve imaget, eks. endringer i en Dockerfile)
-* `docker-compose start` starter containerne i docker-compose fila
-* `docker-compose stop` stopper containerne i docker-compose fila
-* `docker-compose restart` restarter containerne i docker-compose fila
-* `docker-compose down` fjerner containerne i docker-compose fila
 
 Du kan også teste ut 'docker-compose up" uten å angi '-d'. Bruk ctrl-c for å avslutte.
 
-## 1.4 Nå kan vi sjekke om det her funka! 
+## 1.3 Nå kan vi sjekke om det her funka! 
 Om du vil ha en grafisk oversikt over containeren din hvor du kan se om den kjører, inspisere logger osv. kan du nå åpne programmet "docker desktop" dersom du har dette installert. Ta gjerne en titt!
 
 Men det vi egentlig skal er å åpne en ny fane i favorittbrowseren din og skrive inn url'el:
@@ -46,10 +45,20 @@ Men det vi egentlig skal er å åpne en ny fane i favorittbrowseren din og skriv
 
 Du skal da få opp en side nettside som viser pygeoapi sin "html-visning". 🎉
 
-Klikk deg gjerne litt rundt!
+Klikk deg gjerne litt rundt! 
 
-## 1.5 Hva nå?
+## 1.4 Hva nå?
 Ser det bra ut?  
 Eller har du kanskje spørsmål som "Hvem er Tom Kralidis?" og "Hvorfor er det så mye rar informasjon og data her?" 
 
 Gå til [neste øving](oving2.md) så fikser vi det. 😃
+
+
+## 1.5 Andre nyttige docker kommandoer
+
+* `docker compose up -d` starter containerne i docker-compose fila og bygger den dersom den ikke er bygget før
+* `docker compose up -d --build` starter containerne i docker-compose fila og bygger ny container. (Man trenger --build dersom man har gjort endringer på sevlve imaget, eks. endringer i en Dockerfile)
+* `docker compose start` starter containerne i docker-compose fila
+* `docker compose stop`   stopper containerne i docker-compose fila
+* `docker compose restart` restarter containerne i docker-compose fila
+* `docker compose down` fjerner containerne i docker-compose fila
