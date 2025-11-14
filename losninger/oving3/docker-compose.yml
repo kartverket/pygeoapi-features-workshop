@@ -16,7 +16,8 @@ services:
 
   postgis:
     build:
-      context: ./postgis # Sti til postgismappen som inneholder en Dockerfile
+      context: ../../postgis # Sti til postgismappen som inneholder en Dockerfile
+    container_name: postgis
     ports:
       - "5432:5432"
     environment:
