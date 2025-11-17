@@ -13,7 +13,7 @@ Dersom denne filen eksisterer på angitt sti i containeren vil den ta presedens 
 Gå til docker-compose filen og lim inn følgende for å spesifisere at configfilen skal mountes inn som et volum:
 ```yml
     volumes:
-     - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml     # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
+      - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml     # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
 ```
 Det skal limes inn under pygeoapi tjenesten i docker-compose.yml. Eks. under "ports" seksjonen.
 
@@ -46,7 +46,7 @@ For videre endringer i filen _pygeoapi_config.yml_ så holder det å skrive ```d
 Du kan nå åpne åpne ```localhost:5000``` i nettleseren igjen og se om det har skjedd noe.
 
 > 💡 **Tips:** Inspiser docker desktop eller skriv kommandoen ```docker ps``` for oversikt over kjørende containere. 
-> Vi skal nå ha 2 kjørende containere, 1 for pygeoapi og 1 for databaen vår.
+> Vi skal nå ha 2 kjørende containere, 1 for pygeoapi og 1 for databasen vår.
 
 
 
@@ -93,6 +93,7 @@ services:
   postgis:
     build:
       context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
+    container_name: postgis
     ports:
       - "5432:5432"
     environment:

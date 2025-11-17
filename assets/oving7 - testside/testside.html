@@ -6,6 +6,60 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+  <script>
+    L.TileLayer.Grayscale = L.TileLayer.extend({
+    options: {
+      quotaRed: 21,
+      quotaGreen: 71,
+      quotaBlue: 8,
+      quotaDividerTune: 0,
+      quotaDivider: function() {
+        return this.quotaRed + this.quotaGreen + this.quotaBlue + this.quotaDividerTune;
+      }
+    },
+
+    initialize: function (url, options) {
+      options = options || {}
+      options.crossOrigin = true;
+      L.TileLayer.prototype.initialize.call(this, url, options);
+
+      this.on('tileload', function(e) {
+        this._makeGrayscale(e.tile);
+      });
+    },
+
+    _createTile: function () {
+      var tile = L.TileLayer.prototype._createTile.call(this);
+      tile.crossOrigin = "Anonymous";
+      return tile;
+    },
+
+    _makeGrayscale: function (img) {
+      if (img.getAttribute('data-grayscaled'))
+        return;
+
+                  img.crossOrigin = '';
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var pix = imgd.data;
+      for (var i = 0, n = pix.length; i < n; i += 4) {
+                          pix[i] = pix[i + 1] = pix[i + 2] = (this.options.quotaRed * pix[i] + this.options.quotaGreen * pix[i + 1] + this.options.quotaBlue * pix[i + 2]) / this.options.quotaDivider();
+      }
+      ctx.putImageData(imgd, 0, 0);
+      img.setAttribute('data-grayscaled', true);
+      img.src = canvas.toDataURL();
+    }
+  });
+
+  L.tileLayer.grayscale = function (url, options) {
+    return new L.TileLayer.Grayscale(url, options);
+  };
+  </script>
 
   <style>
 
@@ -168,12 +222,14 @@
   function addWmtsLayer() {
     if (wmtsLayer) {
       map.removeLayer(wmtsLayer);
-    }
-    wmtsLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+    }    
+    // wmtsLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+    wmtsLayer = L.tileLayer.grayscale('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; Kartverket'
     });
     wmtsLayer.addTo(map);
+    // wmtsLayer.style.filter = "grayscale(100%)";  
   }
   addWmtsLayer();
 
@@ -297,9 +353,9 @@
   }
 
 const DATA_EXTENT = {
-  minLon: 4.0,
-  minLat: 57.0,
-  maxLon: 32.0,
+  minLon: 1.0,
+  minLat: 2.0,
+  maxLon: 90.0,
   maxLat: 72.5
 };
 

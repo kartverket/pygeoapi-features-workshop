@@ -8,10 +8,10 @@ I denne øvingen skal du utforske hvordan pygeoapi kan tilpasses med egne maler 
 For å legge til templates som du selv kan redigere, mounter vi config-filen inn som tidligere, men i tillegg har vi `static/` og `templates/` mappene som skal mountes:
 
 ```
-  volumes:
-    - ./config.yml:/pygeoapi/local.config.yml
-    - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
-    - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer
+    volumes:
+      - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
+      - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
+      - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer
 ```
 
 I config.yml må vi også peke på hvor malen vår og filene ligger. Dette legges under server-blokka i yaml-filen: 
@@ -35,6 +35,8 @@ Start opp løsning som tidligere med
 3. Se hvordan HTML-visningen ser ut.
 
 ### Oppgave:
+
+`templates/` og `static/` ligger under `assets/`-mappen.
 - Gå inn i `templates/`-mappen i løsningen. Finn filen `landing_page.html`.
 - Gjør endringer i `landing_page.html` (f.eks. legg til en tekst, endre overskrift, eller sett inn et bilde/logo fra `static/img/`).
 - Endre på CSS i `static/css/default.css` for å tilpasse utseendet.
@@ -48,8 +50,191 @@ Med templating og statiske filer kan du tilpasse pygeoapi til å passe din organ
 
 > 💡 Husk: Endringer i maler og statiske filer krever ofte restart av pygeoapi-containeren for å tre i kraft.
 
+<details>
+<summary>Fasit</summary>
+Filen docker-compose.yml skal etter denne øvingen se slik ut:
+
+```yml
+services:
+  pygeoapi:
+    image: geopython/pygeoapi:latest
+    container_name: pygeoapi
+    ports:
+      - "5000:80"
+    volumes:
+     - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
+     - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
+     - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer (bilder/ikoner, styling etc.)
+    restart: unless-stopped
+    depends_on:
+        postgis:
+          condition: service_healthy
+    environment:
+      - DB_NAME=administrative_enheter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwer1234
+      - POSTGRES_HOST=postgis
+      - POSTGRES_DB=administrative_enheter
+
+  postgis:
+    build:
+      context: ./assets/postgis
+    container_name: postgis
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_NAME=administrative_enheter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwer1234
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+```
+
+Filen pygeoapi_config.yml (i mappen config) skal se slik ut:
+
+```yml
+server:
+  bind:
+    host: 0.0.0.0
+    port: 5000
+  cors: true
+  url: http://localhost:5000
+  mimetype: application/json; charset=UTF-8
+  encoding: utf-8
+  gzip: false
+  languages:
+    - en
+  pretty_print: true
+  limits:
+    default_items: 15
+    max_items: 1000
+  map:
+    url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+  admin: false
+  templates:
+    path: /pygeoapi/templates # sti til maler
+    static: /pygeoapi/static # sti til statiske filer
+  logo: http://localhost:5000/static/img/organization_logo.png # sti til logo
+
+logging:
+  level: INFO
+
+metadata:
+  identification:
+    title: Administrative enheter
+    description:
+      en: Datasettet inneholder administrative grenser og områder for Norge, inkludert fylker og kommuner.
+    keywords:
+      - Fylke
+      - Kommune
+      - Administrativ inndeling
+      - Administrative grenser
+      - Fylkesgrenser
+      - Kommunegrenser
+      - Riksgrense
+    keywords_type: theme
+    terms_of_service: https://www.kartverket.no/geodataarbeid/norge-digitalt/partsinformasjon/avtaler-og-vilkar/norge-digitalt-lisens
+    url: https://www.kartverket.no
+
+  license:
+    name: Norge digitalt-lisens
+    url: https://www.kartverket.no/geodataarbeid/norge-digitalt/partsinformasjon/avtaler-og-vilkar/norge-digitalt-lisens
+  provider:
+    name: Kartverket
+    url: https://www.kartverket.no
+  contact:
+    name: Kartverket
+    email: post@kartverket.no
+    url: https://www.kartverket.no
+
+resources:
+  fylker:
+    type: collection
+    title: Fylker
+    description: Din kule beskrivelse av fylker
+    keywords:
+      en:
+        - Fylke
+        - Fylkesgrense
+    extents:
+      spatial:
+        bbox: [4.626095, 57.977101, 31.125157, 71.188325]
+        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+    # links:
+    #   - type: text/html
+    #     rel: related
+    #     title: Geonorge link
+    #     href: https://kartkatalog.geonorge.no/metadata/administrative-enheter-fylker/6093c8a8-fa80-11e6-bc64-92361f002671
+    providers:
+      - type: feature
+        name: PostgreSQL
+        data:
+          host: ${POSTGRES_HOST}
+          dbname: ${POSTGRES_DB}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          search_path: [administrative_enheter_fylker]
+        id_field: objid
+        table: fylke
+        geom_field: omrade
+        crs:
+          - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+          - http://www.opengis.net/def/crs/EPSG/0/25832
+          - http://www.opengis.net/def/crs/EPSG/0/25833
+          - http://www.opengis.net/def/crs/EPSG/0/25835
+          - http://www.opengis.net/def/crs/EPSG/0/4258
+          - http://www.opengis.net/def/crs/EPSG/0/4326
+          - http://www.opengis.net/def/crs/EPSG/0/3857
+        storage_crs: http://www.opengis.net/def/crs/EPSG/0/25833 # Datene vi har i databasen er lagret i koordinatsystemet EPSG:25833
+  kommuner:
+    type: collection
+    title: Kommuner
+    description: Din kule beskrivelse av kommuner
+    keywords:
+      en:
+        - Kommune
+        - Kommunegrenser
+    extents:
+      spatial:
+        bbox: [4.626095, 57.977101, 31.125157, 71.188325]
+        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+    # links:
+    #   - type: text/html
+    #     rel: related
+    #     title: Geonorge link
+    #     href: https://kartkatalog.geonorge.no/metadata/administrative-enheter-kommuner/041f1e6e-bdbc-4091-b48f-8a5990f3cc5b
+    providers:
+      - type: feature
+        name: PostgreSQL
+        data:
+          host: ${POSTGRES_HOST}
+          dbname: ${POSTGRES_DB}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          search_path: [administrative_enheter_kommuner]
+        id_field: objid
+        table: kommune
+        geom_field: omrade
+        crs:
+          - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+          - http://www.opengis.net/def/crs/EPSG/0/25832
+          - http://www.opengis.net/def/crs/EPSG/0/25833
+          - http://www.opengis.net/def/crs/EPSG/0/25835
+          - http://www.opengis.net/def/crs/EPSG/0/4258
+          - http://www.opengis.net/def/crs/EPSG/0/4326
+          - http://www.opengis.net/def/crs/EPSG/0/3857
+        storage_crs: http://www.opengis.net/def/crs/EPSG/0/25833 # Datene vi har i databasen er lagret i koordinatsystemet EPSG:25833
+```
+
+</details>
+
 ---
 
-**Tips:**
-- [pygeoapi docs: Customizing templates](https://docs.pygeoapi.io/en/latest/configuration.html#templates)
-- [Jinja2 template syntax](https://jinja.palletsprojects.com/en/3.1.x/templates/)
+**Ressurser for videre lesning:**
+- [pygeoapi docs: Customizing templates](https://docs.pygeoapi.io/en/latest/html-templating.html)
+- [Jinja template syntax](https://jinja.palletsprojects.com/en/stable/templates/)

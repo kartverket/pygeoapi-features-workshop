@@ -12,27 +12,28 @@ Gå videre til neste steg for å ta det i bruk.
 ## 2.1 Utvid docker-compose filen med vår en database som en service
 Vi skal nå kjøre opp vår egen database og spesifisere hvilken database vi skal bruke og vi pygeoapi muligheten til å koble seg til denne. Det går i to steg. 
 
-Steg 1, definer database service som vil:
+Steg 1, definer database service.  
 Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
 
 ```yml  
-postgis:
-  build:
-    context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
-  ports:
-    - "5432:5432"
-  environment:
-    - DB_NAME=administrative_enheter
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=qwer1234
-  healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U postgres"]
-    interval: 5s
-    timeout: 5s
-    retries: 10
+  postgis:
+    build:
+      context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
+    container_name: postgis
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_NAME=administrative_enheter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwer1234
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 ```
 
-Obs! Her er det viktig at det ikke er noe mellomrom før "postgis" etter innliming. Det skal være like mange mellomrom foran denne som foran "pygeoapi" (som står nest øverst i filen)
+__Obs!__ Her er det viktig å passe på mellomrom før "postgis" etter innliming. Det skal være like mange mellomrom foran denne som foran "pygeoapi" (som står nest øverst i filen)
 
 Steg 2: 
 Utvid pygeoapi med "environment" som inneholder oppkoblingsparametere til databasen. 
@@ -46,7 +47,7 @@ Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
       - POSTGRES_HOST=postgis
       - POSTGRES_DB=administrative_enheter
 ```
-Dette er miljøvariabler som vi gir til pygeoapi-containeren. De inneholder oppkoblingsparametere til databasen.Og fanges automatisk opp av pygeoapi.
+Dette er miljøvariabler som vi gir til pygeoapi-containeren. De inneholder oppkoblingsparametere til databasen og fanges automatisk opp av pygeoapi.
 
 ## 2.2 Kjør docker compose up -d på nytt
 
@@ -83,6 +84,7 @@ services:
   postgis:
     build:
       context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
+    container_name: postgis
     ports:
       - "5432:5432"
     environment:

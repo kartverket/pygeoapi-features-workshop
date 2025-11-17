@@ -10,11 +10,11 @@ Kopier dette inn i filen:
 ```yml
 services:
   pygeoapi:
-    image: geopython/pygeoapi:latest                
-    container_name: pygeoapi                        
+    image: geopython/pygeoapi:latest
+    container_name: pygeoapi
     ports:
-      - "5000:80"                                   
-    restart: unless-stopped                         
+      - "5000:80"
+    restart: unless-stopped
 ```
 
 ## 1.2 På tide å kjøre API'et!

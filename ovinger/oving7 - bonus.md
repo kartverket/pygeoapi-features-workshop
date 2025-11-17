@@ -1,6 +1,6 @@
 # Øving 7 – Bonus: Test ulike OGC API Features-endepunkter med testside.html
 
-I denne bonus-øvingen skal du bruke en ferdig testside for å eksperimentere med ulike OGC API Features-tjenester. Du kan enkelt bytte base URL og teste filtermuligheter mot forskjellige endepunkter.
+Vi har lagd en liten testside der du kan eksperimentere med ulike OGC API Features-tjenester. Du kan enkelt bytte base URL og teste filtermuligheter mot forskjellige endepunkter.
 
 ## 7.1 Start testside.html
 
@@ -15,11 +15,16 @@ Gå til mappen `assets/oving7 - testside/` og åpne `testside.html` i nettlesere
 - Skriv inn ønsket base URL og trykk "Apply".
 - Siden vil automatisk hente collections og tilgjengelige filtermuligheter fra valgt endepunkt.
 
+URLer til forskjellige OGC-apier som kan testes - __NB: Spørringer mot features-tjenester kan være tunge - bruk gjerne filter-funksjoner og bounding box (zoom inn på kartet) for å spørre om begrenset mengde data__: 
+ - OpenStreetMap - Daraa - https://ri.ldproxy.net/daraa
+ - Vingårder i Tyskland - https://ri.ldproxy.net/vineyards
+ - Pdok - kadaster - https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1
+ - Riksantikvaren - kulturmiljøer - https://api.ra.no/kulturmiljoer
+
 ## 7.3 Prøv filter
 
 - For hver collection vises dynamiske filterfelt basert på hvilke attributter (queryables) som er tilgjengelige.
 - Skriv inn filterverdier (eller huk av for boolean-felt) og trykk "Load Data" for å hente data med filteret aktivt.
-- Du kan kombinere flere filter og se hvordan resultatet endrer seg.
 
 ## 7.4 Utforsk kart og data
 
