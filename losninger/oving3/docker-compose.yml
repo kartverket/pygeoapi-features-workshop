@@ -5,7 +5,7 @@ services:
     ports:
       - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     volumes:
-     - ./config.yml:/pygeoapi/local.config.yml    # Her spesifiserer vi at filen config.yml i denne mappen skal importeres inn i containeren
+     - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml    # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
     restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
     environment:
       - DB_NAME=administrative_enheter
@@ -16,7 +16,7 @@ services:
 
   postgis:
     build:
-      context: ../../postgis # Sti til postgismappen som inneholder en Dockerfile
+      context: ../../assets/postgis # Sti til postgismappen som inneholder en Dockerfile
     container_name: postgis
     ports:
       - "5432:5432"

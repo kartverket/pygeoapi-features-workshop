@@ -10,13 +10,11 @@ Kopier dette inn i filen:
 ```yml
 services:
   pygeoapi:
-    image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    image: geopython/pygeoapi:latest                
+    container_name: pygeoapi                        
     ports:
-      - "5000:80"                                 # Her 'mappes' port 5000 i containeren med port 5000 på pc'en din
-    # volumes:
-    #  - ./config.yml:/pygeoapi/local.config.yml    # Her spesifiserer vi at filen config.yml i denne mappen skal importeres inn i containeren
-    restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+      - "5000:80"                                   
+    restart: unless-stopped                         
 ```
 
 ## 1.2 På tide å kjøre API'et!

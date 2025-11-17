@@ -18,7 +18,7 @@ Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
 ```yml  
 postgis:
   build:
-    context: ./postgis # Sti til postgismappen som inneholder en Dockerfile
+    context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
   ports:
     - "5432:5432"
   environment:
@@ -82,7 +82,7 @@ services:
 
   postgis:
     build:
-      context: ./postgis # Sti til postgismappen som inneholder en Dockerfile
+      context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
     ports:
       - "5432:5432"
     environment:

@@ -76,9 +76,9 @@ resources:
           dbname: ${POSTGRES_DB}
           user: ${POSTGRES_USER}
           password: ${POSTGRES_PASSWORD}
-          search_path: [administrative_enheter_fylker]
+          search_path: [administrative_enheter_kommuner] # hmmm
         id_field: objid
-        table: fylke
+        table: kommune # hmmm
         geom_field: omrade
         crs:
           - http://www.opengis.net/def/crs/OGC/1.3/CRS84
@@ -114,9 +114,9 @@ resources:
           dbname: ${POSTGRES_DB}
           user: ${POSTGRES_USER}
           password: ${POSTGRES_PASSWORD}
-          search_path: [administrative_enheter_kommuner]
+          search_path: [administrative_enheter_fylker] # hmmm
         id_field: objid
-        table: kommune
+        table: fylke # hmmm
         geom_field: omrade
         crs:
           - http://www.opengis.net/def/crs/OGC/1.3/CRS84
