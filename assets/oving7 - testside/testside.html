@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet OGC API Features</title>
+  <!-- Leaflet v1.9.4 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+  <style>
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 500px; 
+    }
+
+    #alert {
+      position: absolute;
+      z-index: 100;
+      bottom: 0px;
+      left: 0px;
+      background: rgba(250, 35, 35, 0.548);
+      color: white;
+      padding: 5px;
+    }
+
+    .legend {
+      line-height: 18px;
+      color: #555;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      padding: 6px 8px;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+
+    #modal {
+      background-color: white;
+      animation-name: progress;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      height: 4px;
+      margin-top: -4px;
+    }
+
+    @keyframes progress {
+      0% {
+        background-color: white;
+      }
+      50% {
+        background-color:rgba(255, 153, 0, 0.5);
+      }
+      100% {
+        background-color: white;
+      }
+    }
+
+
+  /* Responsive feature property table for sidebar */
+  .feature-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .feature-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1em;
+    background: white;
+    margin-bottom: 1em;
+  }
+  .feature-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+    word-break: break-word;
+    font-size: 0.98em;
+  }
+  .feature-table tr:last-child td {
+    border-bottom: none;
+  }
+  .prop-cell {
+    font-weight: bold;
+    color: #333;
+    width: 40%;
+    min-width: 90px;
+    background: #f7f7fa;
+  }
+  .val-cell {
+    text-align: left;
+    color: #222;
+    width: 60%;
+    min-width: 120px;
+    background: #fff;
+  }
+
+  @media (max-width: 600px) {
+    .feature-table td {
+    padding: 6px 4px;
+    font-size: 0.93em;
+    }
+    .feature-table-wrapper {
+    padding: 0;
+    }
+    #sidebar {
+    font-size: 0.97em;
+    padding: 4px 0 0 0;
+    }
+  }
+
+    #sidebar {
+        overflow: auto;
+    }
+  </style>
+
+</head>
+
+<body>
+  
+  <h1>OGC API Features - Testside</h1>
+  <div style="margin-bottom: 12px;">
+    <label for="baseurl-input" style="font-weight:bold;">OGC API Base URL:</label>
+    <input id="baseurl-input" type="text" value="http://localhost:5000" style="width: 340px; max-width: 90%; margin-left: 8px;">
+    <button id="baseurl-apply" style="margin-left: 8px;">Apply</button>
+  </div>
+  <div id="filter-controls" style="margin-bottom: 12px;"></div>
+  <div id="alert" style="display:none">Too many results returned! Not all features were added to the map. Try zooming into a smaller map extent.</div>
+  <div id="map"></div>
+  <div id="sidebar"></div>
+
+</body>
+
+<script>
+
+  // --- CONFIG ---
+  const map = L.map('map');
+  // --- CONFIG ---
+  let base_url = "http://localhost:5000";
+  const featureLimit = 1000;
+  let xhr;
+  // Will be filled after discovery
+  let collections = [];
+  // Store queryables for each collection
+  const collectionQueryables = {};
+  // Store filter values for each collection
+  const collectionFilters = {};
+  const loadedFeatureIds = {};
+  const layers = {};
+  const overlayMaps = {};
+  // Color palette for dynamic collections
+  const colorPalette = [
+    '#377eb8', '#e41a1c', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf', '#999999', '#66c2a5', '#fc8d62',
+    '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'
+  ];
+
+  // --- BASEMAP ---
+  let wmtsLayer;
+  function addWmtsLayer() {
+    if (wmtsLayer) {
+      map.removeLayer(wmtsLayer);
+    }
+    wmtsLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+      maxZoom: 19,
+      attribution: '&copy; Kartverket'
+    });
+    wmtsLayer.addTo(map);
+  }
+  addWmtsLayer();
+
+  // --- LAYERS ---
+  function setupLayers() {
+    // Remove any existing layers from map
+    Object.values(layers).forEach(layer => map.removeLayer(layer));
+    Object.keys(layers).forEach(k => delete layers[k]);
+    Object.keys(overlayMaps).forEach(k => delete overlayMaps[k]);
+    collections.forEach((col, idx) => {
+      loadedFeatureIds[col.id] = new Set();
+      const color = col.color || colorPalette[idx % colorPalette.length];
+      layers[col.id] = L.geoJSON([], {
+        style: {
+          color: color,
+          weight: 1.5, // thicker border
+          fillOpacity: 0.1, // more visible fill
+          opacity: 0.95, // more visible border
+          fillColor: color // ensure fill color matches
+        },
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => showFeatureSidebar(col, feature));
+        },
+        filter: function(feature) {
+          // Only add if not already loaded
+          if (!feature.id) return true;
+          if (loadedFeatureIds[col.id].has(feature.id)) return false;
+          loadedFeatureIds[col.id].add(feature.id);
+          return true;
+        }
+      }).addTo(map);
+      overlayMaps[col.title || col.id] = layers[col.id];
+    });
+  }
+
+  // --- Combined Legend & Layer Control ---
+  let combinedControl;
+  function addCombinedControl() {
+    if (combinedControl) {
+      combinedControl.remove();
+    }
+    combinedControl = L.control({ position: 'topright' });
+    combinedControl.onAdd = function(map) {
+      const div = L.DomUtil.create('div', 'info legend');
+      div.style.background = 'rgba(255,255,255,0.95)';
+      div.style.padding = '8px';
+      div.style.minWidth = '160px';
+      div.innerHTML = `<b>Layers</b><br/>`;
+      collections.forEach((col, idx) => {
+        const color = col.color || colorPalette[idx % colorPalette.length];
+        const checked = map.hasLayer(layers[col.id]) ? 'checked' : '';
+        div.innerHTML += `
+          <label style="display:flex;align-items:center;margin-bottom:4px;cursor:pointer;">
+            <input type="checkbox" data-layer="${col.id}" style="margin-right:6px;" ${checked}>
+            <span style="background:${color};width:18px;height:18px;display:inline-block;margin-right:8px;border-radius:3px;"></span>
+            <span>${col.title || col.id}</span>
+          </label>
+        `;
+      });
+      return div;
+    };
+    combinedControl.addTo(map);
+    // Attach event listener after control is added
+    setTimeout(() => {
+      const controlDiv = document.querySelector('.info.legend');
+      if (controlDiv) {
+        controlDiv.addEventListener('change', updateLayerVisibility);
+      }
+    }, 0);
+  }
+
+  function updateLayerVisibility() {
+    const controlDiv = document.querySelector('.info.legend');
+    if (!controlDiv) return;
+    controlDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      const colId = cb.getAttribute('data-layer');
+      if (cb.checked) {
+        if (!map.hasLayer(layers[colId])) map.addLayer(layers[colId]);
+      } else {
+        if (map.hasLayer(layers[colId])) map.removeLayer(layers[colId]);
+      }
+    });
+  }
+
+  // --- DATA LOADING ---
+  function addData(url, colId) {
+    let nxt_lnk;
+    const layer = layers[colId];
+    const len = layer.getLayers().length;
+    xhr = $.getJSON(url, data => {
+      // Count only unique features
+      let newFeatures = 0;
+      if (data.features) {
+        data.features.forEach(f => {
+          if (f.id && !loadedFeatureIds[colId].has(f.id)) newFeatures++;
+        });
+      }
+      if ((layer.getLayers().length + newFeatures) > featureLimit) {
+        $('#modal').remove();
+        $('#alert').show();
+        return;
+      }
+      layer.addData(data);
+      if (data.links) {
+        for (const lnk of data.links) {
+          if (lnk.rel === "next") {
+            nxt_lnk = lnk.href;
+            break;
+          }
+        }
+      }
+      if (nxt_lnk) {
+        addData(nxt_lnk, colId);
+      } else {
+        $('#modal').remove();
+      }
+    }).fail((jqXHR, error) => {
+      console.log('Unable to load json - ' + error);
+      $('#modal').remove();
+    });
+  }
+
+const DATA_EXTENT = {
+  minLon: 4.0,
+  minLat: 57.0,
+  maxLon: 32.0,
+  maxLat: 72.5
+};
+
+function getBufferedBBox(bounds, bufferRatio = 0.05) {
+  const sw = bounds.getSouthWest();
+  const ne = bounds.getNorthEast();
+
+  let minLon = sw.lng;
+  let minLat = sw.lat;
+  let maxLon = ne.lng;
+  let maxLat = ne.lat;
+
+  const bufferLng = (maxLon - minLon) * bufferRatio;
+  const bufferLat = (maxLat - minLat) * bufferRatio;
+  minLon -= bufferLng;
+  minLat -= bufferLat;
+  maxLon += bufferLng;
+  maxLat += bufferLat;
+
+  // Intersect with dataset extent
+  minLon = Math.max(DATA_EXTENT.minLon, Math.min(DATA_EXTENT.maxLon, minLon));
+  maxLon = Math.max(DATA_EXTENT.minLon, Math.min(DATA_EXTENT.maxLon, maxLon));
+  minLat = Math.max(DATA_EXTENT.minLat, Math.min(DATA_EXTENT.maxLat, minLat));
+  maxLat = Math.max(DATA_EXTENT.minLat, Math.min(DATA_EXTENT.maxLat, maxLat));
+
+  return [minLon, minLat, maxLon, maxLat].join(",");
+}
+
+
+  function loadData() {
+    $('#alert').hide();
+    if (xhr) xhr.abort();
+    // Clear loaded feature IDs and layers
+    collections.forEach(col => loadedFeatureIds[col.id].clear());
+    Object.values(layers).forEach(layer => layer.clearLayers());
+    const bounds = map.getBounds();
+    // Use a small buffer to avoid missing features at the edge, but not too large
+    const bbox = getBufferedBBox(bounds, 0.2); // 2% buffer
+
+    console.log("Leaflet bounds:", bounds.toBBoxString());
+    console.log("BBOX used for request:", bbox);
+
+    collections.forEach(col => {
+      let url = `${base_url}/collections/${col.id}/items?limit=${featureLimit}&bbox=${bbox}&f=json`;
+      console.log("Request URL for", col.id, ":", url);
+      // Add filter params if set
+      if (collectionFilters[col.id]) {
+        Object.entries(collectionFilters[col.id]).forEach(([key, val]) => {
+          if (val !== "") {
+            url += `&${encodeURIComponent(key)}=${encodeURIComponent(val)}`;
+          }
+        });
+      }
+      addData(url, col.id);
+    });
+  }
+
+  // Debounce utility
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+  function setupMapEvents() {
+    // No automatic data loading on map events; handled by Load Data button only
+  }
+
+  // --- COLLECTION DISCOVERY ---
+  function discoverCollections() {
+    $.getJSON(`${base_url}/collections`, data => {
+      if (!data.collections) {
+        alert('No collections found at the OGC API Features endpoint.');
+        return;
+      }
+      // Map to our expected format: {id, title, color}
+      collections = data.collections.map((col, idx) => ({
+        id: col.id,
+        title: col.title || col.id,
+        color: colorPalette[idx % colorPalette.length]
+      }));
+      // Fetch queryables for each collection, then render filters and map
+      let queryablesFetched = 0;
+      collections.forEach(col => {
+        $.getJSON(`${base_url}/collections/${col.id}/queryables`, qdata => {
+          collectionQueryables[col.id] = qdata.properties || {};
+        }).always(() => {
+          queryablesFetched++;
+          if (queryablesFetched === collections.length) {
+            renderFilterControls();
+            setupLayers();
+            addCombinedControl();
+            setupMapEvents();
+            // Initial view (try to use extent if available)
+            let initialViewSet = false;
+            for (const col of data.collections) {
+              if (col.extent && col.extent.spatial && col.extent.spatial.bbox && col.extent.spatial.bbox.length > 0) {
+                const bbox = col.extent.spatial.bbox[0];
+                const sw = [bbox[1], bbox[0]];
+                const ne = [bbox[3], bbox[2]];
+                map.fitBounds([sw, ne]);
+                initialViewSet = true;
+                break;
+              }
+            }
+            if (!initialViewSet) {
+              map.setView([60.2827, 9.5207], 7);
+            }
+            // Do NOT trigger initial data load here; wait for user interaction
+          }
+        });
+      });
+    }).fail((jqXHR, error) => {
+      alert('Failed to fetch collections from OGC API Features endpoint.');
+    });
+  }
+
+  // Render dynamic filter controls for each collection
+  function renderFilterControls() {
+    const $filters = $('#filter-controls');
+    $filters.empty();
+    const $container = $('<div style="display:flex;flex-wrap:wrap;gap:18px 24px;"></div>');
+    collections.forEach(col => {
+      const queryables = collectionQueryables[col.id] || {};
+      if (Object.keys(queryables).length === 0) return;
+      const $fieldset = $('<fieldset style="margin-bottom:10px;padding:10px 16px 8px 16px;border-radius:7px;border:1.5px solid #e0e0e0;min-width:220px;max-width:340px;background:#fafbfc;box-shadow:0 1px 2px rgba(0,0,0,0.03);"></fieldset>');
+      $fieldset.append(`<legend style="font-weight:bold;font-size:1.08em;margin-bottom:6px;">${col.title}</legend>`);
+      const $table = $('<table style="width:100%;border-collapse:separate;border-spacing:0 6px;"></table>');
+      Object.entries(queryables).forEach(([key, prop]) => {
+        if (["string","number","integer","boolean"].includes(prop.type)) {
+          const inputType = prop.type === "boolean" ? "checkbox" : "text";
+          const label = prop.title || key;
+          let $input;
+          if (inputType === "checkbox") {
+            $input = $(`<input type="checkbox" id="${col.id}_${key}" style="margin-right:4px;">`);
+            $input.on('change', function() {
+              if (!collectionFilters[col.id]) collectionFilters[col.id] = {};
+              collectionFilters[col.id][key] = this.checked ? 'true' : '';
+            });
+          } else {
+            $input = $(`<input type="text" id="${col.id}_${key}" style="width:120px;padding:3px 6px;margin-right:2px;border-radius:4px;border:1px solid #ccc;">`);
+            $input.on('input', function() {
+              if (!collectionFilters[col.id]) collectionFilters[col.id] = {};
+              collectionFilters[col.id][key] = this.value;
+            });
+          }
+          const $row = $('<tr></tr>');
+          $row.append($(`<td style="text-align:right;vertical-align:middle;padding-right:7px;font-size:0.97em;white-space:nowrap;color:#333;">${label}:</td>`));
+          $row.append($('<td style="vertical-align:middle;">').append($input));
+          $table.append($row);
+        }
+      });
+      $fieldset.append($table);
+      $container.append($fieldset);
+    });
+    $filters.append($container);
+    // Add Load Data button
+    const $btn = $('<button id="load-data-btn" style="margin-top:12px;font-size:1.08em;padding:6px 18px;border-radius:5px;background:#377eb8;color:white;border:none;cursor:pointer;">Load Data</button>');
+    $filters.append($btn);
+    $btn.on('click', function() {
+      if ($('#modal').length === 0) {
+        $('#map').before('<div id="modal"></div>');
+      }
+      loadData();
+    });
+  }
+
+
+  // --- INIT ---
+  $(document).ready(function() {
+    // Set up base URL input
+    $('#baseurl-input').val(base_url);
+    $('#baseurl-apply').on('click', function() {
+      const newUrl = $('#baseurl-input').val().trim();
+      if (newUrl && newUrl !== base_url) {
+        base_url = newUrl;
+        // Abort any ongoing AJAX request for features
+        if (xhr && xhr.readyState !== 4) xhr.abort();
+        // Clear all state
+        $('#sidebar').empty();
+        Object.values(layers).forEach(layer => layer.clearLayers());
+        // Reset collections, queryables, and filters
+        collections = [];
+        for (const k in collectionQueryables) delete collectionQueryables[k];
+        for (const k in collectionFilters) delete collectionFilters[k];
+        for (const k in loadedFeatureIds) delete loadedFeatureIds[k];
+        $('#filter-controls').empty();
+        addWmtsLayer(); // Reload WMTS basemap
+        discoverCollections();
+      }
+    });
+    discoverCollections();
+  });
+
+  // --- SIDEBAR ---
+  function showFeatureSidebar(col, feature) {
+    const props = feature.properties;
+    let html = `<h3 style=\"margin-top:0\">${col.name} properties</h3>`;
+    html += `<div class=\"feature-table-wrapper\"><table class=\"feature-table\"><tbody>`;
+    for (const key in props) {
+      if (key === 'geom_poly' || key === 'geom_point') continue;
+      html += `<tr><td class=\"prop-cell\">${key}</td><td class=\"val-cell\">${props[key]}</td></tr>`;
+    }
+    html += `</tbody></table></div>`;
+    $('#sidebar').html(html);
+  }
+
+</script>
+
+</html>
