@@ -31,7 +31,8 @@ postgis:
     timeout: 5s
     retries: 10
 ```
-Obs! Her er det viktig at det ikke er noe mellomrom før "postgis" etter innliming. Det skal være like mange mellomrom foran denne som foran "pygeoapi" (som står nest øverst i filen) 
+
+Obs! Her er det viktig at det ikke er noe mellomrom før "postgis" etter innliming. Det skal være like mange mellomrom foran denne som foran "pygeoapi" (som står nest øverst i filen)
 
 Steg 2: 
 Utvid pygeoapi med "environment" som inneholder oppkoblingsparametere til databasen. 
@@ -55,3 +56,44 @@ Vi har gitt pygeoapi-containeren _tilgang_ til databasen, men vi har enda ikke b
 Dette må vi gjøre med en pygeoapi konfigurasjonsfil.
 
 Gå til [neste øving](oving3.md) så ser vi hvordan vi får pygeoapi til å faktisk bruke disse dataene.
+
+
+<details>
+<summary>Fasit</summary>
+Filen docker-compose.yml skal etter denne øvingen se slik ut:
+
+```yml
+services:
+  pygeoapi:
+    image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
+    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    ports:
+      - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
+    restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+    depends_on:
+        postgis:
+          condition: service_healthy
+    environment:
+      - DB_NAME=administrative_enheter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwer1234
+      - POSTGRES_HOST=postgis
+      - POSTGRES_DB=administrative_enheter
+
+  postgis:
+    build:
+      context: ./postgis # Sti til postgismappen som inneholder en Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_NAME=administrative_enheter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwer1234
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+
+```
+</details>

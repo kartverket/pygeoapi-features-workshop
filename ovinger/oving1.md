@@ -53,7 +53,6 @@ Eller har du kanskje spørsmål som "Hvem er Tom Kralidis?" og "Hvorfor er det s
 
 Gå til [neste øving](oving2.md) så fikser vi det. 😃
 
-
 ## 1.5 Andre nyttige docker kommandoer
 
 * `docker compose up -d` starter containerne i docker-compose fila og bygger den dersom den ikke er bygget før
@@ -62,3 +61,21 @@ Gå til [neste øving](oving2.md) så fikser vi det. 😃
 * `docker compose stop`   stopper containerne i docker-compose fila
 * `docker compose restart` restarter containerne i docker-compose fila
 * `docker compose down` fjerner containerne i docker-compose fila
+
+
+<details>
+<summary>Fasit</summary>
+Du skal nå ha en fil "docker-compose.yml" i hovedmappen in. (Mappen ett hakk over ovinger-mappen).
+Innholdet i filen skal være:
+
+```yml
+services:
+  pygeoapi:
+    image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
+    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    ports:
+      - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
+    restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+
+```
+</details>
