@@ -11,11 +11,13 @@ For å ta denne configfilen i bruk, så benytter vi docker volume mount og mount
 Dersom denne filen eksisterer på angitt sti i containeren vil den ta presedens over standard configfil.
 
 Gå til docker-compose filen og lim inn følgende for å spesifisere at configfilen skal mountes inn som et volum:
+(Det skal limes inn under pygeoapi tjenesten i docker-compose.yml. Eks. under "ports" seksjonen.)
+
 ```yml
     volumes:
       - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml     # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
 ```
-Det skal limes inn under pygeoapi tjenesten i docker-compose.yml. Eks. under "ports" seksjonen.
+
 
 <details>
 <summary>Eksempel</summary>
@@ -24,7 +26,7 @@ Det skal limes inn under pygeoapi tjenesten i docker-compose.yml. Eks. under "po
 ...
         pygeoapi:
           image: geopython/pygeoapi:latest            
-          container_name: pygeoapi                    
+          container_name: pygeoapi_ws                    
           ports:
             - "5000:80"                               
 Her -->   volumes:
@@ -36,10 +38,14 @@ Her -->   volumes:
 ```
 </details>
 
-Kjør så kommandoen ```docker compose up -d``` for å starte på nytt med endringene vi har gjort.
+Kjør så kommandoen 
+```
+docker compose up -d
+``` 
+for å starte på nytt med endringene vi har gjort.
 
-Når disse to linjene er lagt inn vil det være en koblig mellom filen pygeoapi_config.yml i dette workspacet og filen local.config.yml som lever inne i containeren.
-Du kan derfor redigere filen pygeoapi_config.yml som du vil og pygeoapi får meg seg endringene. Du er imidlertidig nødt til å restarte pygeoapi hver gang du gjør endringer i filen, da pygeoapi leser denne filen inn ved oppstart. (Dersom den hadde lest filen 'dynamisk' hadde du ikke trengt å restarte pygeoapi ved endring av filen)
+Når disse to linjene er lagt inn vil det være en koblig mellom filen pygeoapi_config.yml i dette workspacet og filen local.config.yml som lever inne i pygeoapi containeren.
+Du kan derfor redigere filen pygeoapi_config.yml som du vil og pygeoapi får meg seg endringene. Du er imidlertidig nødt til å restarte pygeoapi hver gang du gjør endringer i filen, da pygeoapi leser denne filen inn ved oppstart. (Kan endres til "hot reloading" ved eks. å overstyre entrypoint kommandoen til pygeoapi imaget)
 
 For videre endringer i filen _pygeoapi_config.yml_ så holder det å skrive ```docker compose restart pygeoapi``` for å restarte pygeoapi med oppdatert config. Men om det gjøres endringer i filen docker-compose.yaml, så må "docker compose up -d" kjøres.
 
@@ -74,7 +80,7 @@ Filen docker-compose.yml skal etter denne øvingen se slik ut:
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    container_name: pygeoapi_ws                        # valgfritt, men det er fint å sette eget container navn
     ports:
       - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     volumes:

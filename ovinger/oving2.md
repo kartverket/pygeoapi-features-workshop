@@ -5,12 +5,12 @@ Vi har valgt å bruke datasettet 'Administrative enheter" som kan lastes ned på
 Her hjelper vi dere litt.. 
 Vi har lastet ned datasettet som en "postgis dump" fra geonorge.no lagt til oppsett for å flytte dataene inn i en postgis database. Pygeoapi kan bruke diverse filer som kildedata (eks. esri fgdb), men som oftest benytter man en databaseserver.
 
-Dataene og opsettet for å få disse inn i en docker container ligger under mappen 'postgis'. 
+Dataene og opsettet for å få disse inn i en docker container ligger under mappen 'assets/postgis'. 
 
 Gå videre til neste steg for å ta det i bruk. 
 
-## 2.1 Utvid docker-compose filen med vår en database som en service
-Vi skal nå kjøre opp vår egen database og spesifisere hvilken database vi skal bruke og vi pygeoapi muligheten til å koble seg til denne. Det går i to steg. 
+## 2.1 Utvid docker-compose filen med vår egen database
+Vi skal nå kjøre opp vår egen postgis database i en docker container. Vi skal også spesifisere at pygeoapi skal ha muligheten til å koble seg til denne. Det går i to steg. 
 
 Steg 1, definer database service.  
 Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
@@ -48,8 +48,13 @@ Kan f.eks. limes inn rett under linjen "restart: unless-stopped"
       - POSTGRES_DB=administrative_enheter
 ```
 Dette er miljøvariabler som vi gir til pygeoapi-containeren. De inneholder oppkoblingsparametere til databasen og fanges automatisk opp av pygeoapi.
+(Om dere senere setter opp noe lignende med en "ekte" database; bruk en .env fil som _ikke_ committes til github. Eksemelet vårt over er egentlig litt fyfy)
 
 ## 2.2 Kjør docker compose up -d på nytt
+```
+docker compose up -d
+```
+Klikk deg gjerne litt rundt. 
 
 Finner du fylker og kommuner under [collections](http://localhost:5000/collections?f=html)?
 I så fall er du flinkere enn oss. 🙂
@@ -67,7 +72,7 @@ Filen docker-compose.yml skal etter denne øvingen se slik ut:
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    container_name: pygeoapi_ws                        # valgfritt, men det er fint å sette eget container navn
     ports:
       - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'

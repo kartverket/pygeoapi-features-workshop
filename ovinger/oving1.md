@@ -1,17 +1,21 @@
 # Øving 1
 En enkel måte å kjøre pygeoapi på er ved å bruke pygeoapi sitt docker image. Et image kan bygges til en container som kjører lokalt på pc'en din.
-I denne øvingen skal vi bruke docker compose for å kjøre pygeoapi sitt image som en container på din pc.
+I denne øvingen skal vi bruke "docker compose" for å kjøre pygeoapi sitt docker image som en container på din pc.
 
 ## 1.1 Lag en en fil som heter docker-compose.yaml
-1. Lag en fil som heter "docker-compose.yaml"
-Denne filen skal spesifisere hvordan pygeoapi skal kjøres. 
+1. I hovedmappen ([pygeoapi-features workshop](../../pygeoapi-features-workshop/)) Lag en fil som heter 
+```
+docker-compose.yaml
+```
+
+I denne filen skal vi spesifisere hvordan pygeoapi skal kjøres med docker. Vi benytter geopython sitt ferdige image direkte.
 Kopier dette inn i filen:
 
 ```yml
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest
-    container_name: pygeoapi
+    container_name: pygeoapi_ws
     ports:
       - "5000:80"
     restart: unless-stopped
@@ -30,6 +34,7 @@ Kommandoen vil her hente ned image og bygge en container som kjører apiet. '-d'
 
 For å se at du har en container kjørende, skriv gjerne inn:
 ```docker ps``` i terminalen og se hva det står under status. ("Up" er bra)
+Denne kommandoen vil være nyttig å kjøre i de senere øvingene for å se om containerene våre kjører eller ikke.
 
 
 Du kan også teste ut 'docker-compose up" uten å angi '-d'. Bruk ctrl-c for å avslutte.
@@ -70,7 +75,7 @@ Innholdet i filen skal være:
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    container_name: pygeoapi_ws                        # valgfritt, men det er fint å sette eget container navn
     ports:
       - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'

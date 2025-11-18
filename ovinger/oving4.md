@@ -7,7 +7,7 @@ Denne øvingen og de neste øvingene er litt mer frie. Ta gjerne friheten til å
 ## 4.1 Klikk deg litt rundt
 Nå kan du klikke deg rundt og utforske ulike deler av api'et.
 
-Under API Definition på hovedsiden ligger det link til api dokumentasjon med swagger. (http://localhost:5000/openapi?f=html)
+Under API Definition på hovedsiden ligger det link til api dokumentasjon med swagger. (http://localhost:5000/openapi?f=html) (obs. redoc varianten funker ikke, vi skylder på geopython her)
 Her kan man utforske de ulike endepunktene til api'et.
 
 Under collections ligger datasettene våre. Under queryables ligger feltene man kan benytte i spørringer.

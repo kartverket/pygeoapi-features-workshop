@@ -58,7 +58,7 @@ Filen docker-compose.yml skal etter denne øvingen se slik ut:
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest
-    container_name: pygeoapi
+    container_name: pygeoapi_ws
     ports:
       - "5000:80"
     volumes:

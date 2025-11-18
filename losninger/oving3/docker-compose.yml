@@ -1,7 +1,7 @@
 services:
   pygeoapi:
     image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi                        # valgfritt, men det er fint å sette eget container navn
+    container_name: pygeoapi_ws                        # valgfritt, men det er fint å sette eget container navn
     ports:
       - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     volumes:

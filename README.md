@@ -25,6 +25,12 @@ Unzip så mappen til ønsket plassering.
 
 Vi anbefaler å bruke git dersom du har det installert på pc'en din.
 
-Åpne så mappen med VS Code ev. annet verktøy for å redigere filene. (notepad++, etc.)
+Åpne så mappen med VS Code ev. annet verktøy for å redigere filene. (notepad++, etc.) Og åpne en terminal i angitt mappe. For VSCode kan man trykke ctrl+j (cmd for mac). Om man bruker program som ikke har integrert terminal kan man høyreklikke i mappen og velge "Åpne i terminal".
 
-For å starte, klikk deg inn på [øving 1](ovinger/oving1).
+Så, checklist før vi starter:
+- [x] Docker (desktop) er lastet ned og kjører
+- [x] Dette repoet er clonet eller lastet ned og unzippet
+- [x] Mappen er åpnet i VSCode ev. annet program. Mappen er også åpen i en terminal (integrert i VSCode)
+
+
+For å starte, klikk deg inn på [øving 1](ovinger/oving1.md)
