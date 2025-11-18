@@ -1,8 +1,9 @@
 # Øving 3
+
 Pygeoapi trenger å vite hvor den skal lete etter data. I forrige øving kjørte vi opp en database, men vi "glemte" å konfiguere pygeoapi til å bruke disse dataene. Det skal vi fikse nå.
 
-
 ## 3.1 Benytt egen konfigurasjonsfil for pygeoapi
+
 Konfigurasjonsfilen styrer en del ting som metadata og koblig til datakilde.
 Det blir fort litt mye å fylle ut og vi har derfor laget en ferdig utfyllt config-fil i mappen "config".
 Ta gjerne en titt i filen og spesielt det som er under "resources". Her spesifiserer vi datasettene våre, som i dette tilfellet er kommuner og fylker.
@@ -14,10 +15,9 @@ Gå til docker-compose filen og lim inn følgende for å spesifisere at configfi
 (Det skal limes inn under pygeoapi tjenesten i docker-compose.yml. Eks. under "ports" seksjonen.)
 
 ```yml
-    volumes:
-      - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml     # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
+volumes:
+  - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
 ```
-
 
 <details>
 <summary>Eksempel</summary>
@@ -25,38 +25,40 @@ Gå til docker-compose filen og lim inn følgende for å spesifisere at configfi
 ```yml
 ...
         pygeoapi:
-          image: geopython/pygeoapi:latest            
-          container_name: pygeoapi_ws                    
+          image: geopython/pygeoapi:latest
+          container_name: pygeoapi_ws
           ports:
-            - "5000:80"                               
+            - "5000:80"
 Her -->   volumes:
-            - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml 
-          restart: unless-stopped                     
+            - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml
+          restart: unless-stopped
           environment:
 
 ...
 ```
+
 </details>
 
-Kjør så kommandoen 
+Kjør så kommandoen
+
 ```
 docker compose up -d
-``` 
+```
+
 for å starte på nytt med endringene vi har gjort.
 
 Når disse to linjene er lagt inn vil det være en koblig mellom filen pygeoapi_config.yml i dette workspacet og filen local.config.yml som lever inne i pygeoapi containeren.
 Du kan derfor redigere filen pygeoapi_config.yml som du vil og pygeoapi får meg seg endringene. Du er imidlertidig nødt til å restarte pygeoapi hver gang du gjør endringer i filen, da pygeoapi leser denne filen inn ved oppstart. (Kan endres til "hot reloading" ved eks. å overstyre entrypoint kommandoen til pygeoapi imaget)
 
-For videre endringer i filen _pygeoapi_config.yml_ så holder det å skrive ```docker compose restart pygeoapi``` for å restarte pygeoapi med oppdatert config. Men om det gjøres endringer i filen docker-compose.yaml, så må "docker compose up -d" kjøres.
+For videre endringer i filen _pygeoapi_config.yml_ så holder det å skrive `docker compose restart pygeoapi_ws` for å restarte pygeoapi med oppdatert config. Men om det gjøres endringer i filen docker-compose.yaml, så må "docker compose up -d" kjøres.
 
-Du kan nå åpne åpne ```localhost:5000``` i nettleseren igjen og se om det har skjedd noe.
+Du kan nå åpne åpne `localhost:5000` i nettleseren igjen og se om det har skjedd noe.
 
-> 💡 **Tips:** Inspiser docker desktop eller skriv kommandoen ```docker ps``` for oversikt over kjørende containere. 
+> 💡 **Tips:** Inspiser docker desktop eller skriv kommandoen `docker ps` for oversikt over kjørende containere.
 > Vi skal nå ha 2 kjørende containere, 1 for pygeoapi og 1 for databasen vår.
 
-
-
 ## 3.2 Finn en feil og fiks konfigurasjonsfilen
+
 Vi har selvfølgelig klart å gjøre en feil i oppsettet vårt. Klarer du å finne feilen(e)?
 
 <details>
@@ -66,11 +68,10 @@ Kan sees om man eks. går til ```http://localhost:5000/collections/fylker/items`
 Dette er feil som må rettes opp i konfigurasjonsfilen pygeoapi_config.yml. 
 </details>
 
-Fiks feilene i filen og kjør: 
-```docker compose restart pygeoapi```
-ev. 
-```docker compose up -d``` (gjør samme nytten, men litt mer også)
-
+Fiks feilene i filen og kjør:
+`docker compose restart pygeoapi_ws`
+ev.
+`docker compose up -d` (gjør samme nytten, men litt mer også)
 
 <details>
 <summary>Fasit</summary>
@@ -79,16 +80,16 @@ Filen docker-compose.yml skal etter denne øvingen se slik ut:
 ```yml
 services:
   pygeoapi:
-    image: geopython/pygeoapi:latest                # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi_ws                        # valgfritt, men det er fint å sette eget container navn
+    image: geopython/pygeoapi:latest # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
+    container_name: pygeoapi_ws # valgfritt, men det er fint å sette eget container navn
     ports:
-      - "5000:80"                                   # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
+      - "5000:80" # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
     volumes:
-      - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml     # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
-    restart: unless-stopped                         # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+      - ./config/pygeoapi_config.yml:/pygeoapi/local.pygeoapi_config.yml # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
+    restart: unless-stopped # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
     depends_on:
-        postgis:
-          condition: service_healthy
+      postgis:
+        condition: service_healthy
     environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres
@@ -107,11 +108,10 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwer1234
     healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U postgres"]
-        interval: 5s
-        timeout: 5s
-        retries: 10
-
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 ```
 
 Filen pygeoapi_config.yml (i mappen config) skal se slik ut:

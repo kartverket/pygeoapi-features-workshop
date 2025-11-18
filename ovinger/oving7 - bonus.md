@@ -15,11 +15,12 @@ Gå til mappen `assets/oving7 - testside/` og åpne `testside.html` i nettlesere
 - Skriv inn ønsket base URL og trykk "Apply".
 - Siden vil automatisk hente collections og tilgjengelige filtermuligheter fra valgt endepunkt.
 
-URLer til forskjellige OGC-apier som kan testes - __NB: Spørringer mot features-tjenester kan være tunge - bruk gjerne filter-funksjoner og bounding box (zoom inn på kartet) for å spørre om begrenset mengde data__: 
- - OpenStreetMap - Daraa - https://ri.ldproxy.net/daraa
- - Vingårder i Tyskland - https://ri.ldproxy.net/vineyards
- - Pdok - kadaster - https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1
- - Riksantikvaren - kulturmiljøer - https://api.ra.no/kulturmiljoer
+URLer til forskjellige OGC-apier som kan testes - **NB: Spørringer mot features-tjenester kan være tunge - bruk gjerne filter-funksjoner og bounding box (zoom inn på kartet) for å spørre om begrenset mengde data**:
+
+- OpenStreetMap - Daraa - https://ri.ldproxy.net/daraa
+- Vingårder i Tyskland - https://ri.ldproxy.net/vineyards
+- Pdok - kadaster - https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1
+- Riksantikvaren - kulturmiljøer - https://api.ra.no/kulturmiljoer
 
 ## 7.3 Prøv filter
 

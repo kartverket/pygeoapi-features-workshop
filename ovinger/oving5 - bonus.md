@@ -2,7 +2,6 @@
 
 I denne øvingen skal du utforske hvordan pygeoapi kan tilpasses med egne maler (templates) og statiske filer. Dette gir deg mulighet til å endre utseende og funksjonalitet på API-et, for eksempel for å tilpasse HTML-visningen eller legge til egne bilder og CSS.
 
-
 ## 5.1 Rediger docker-compose.yml og config.yml
 
 For å legge til templates som du selv kan redigere, mounter vi config-filen inn som tidligere, men i tillegg har vi `static/` og `templates/` mappene som skal mountes:
@@ -14,7 +13,7 @@ For å legge til templates som du selv kan redigere, mounter vi config-filen inn
       - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer
 ```
 
-I config.yml må vi også peke på hvor malen vår og filene ligger. Dette legges under server-blokka i yaml-filen: 
+I config.yml må vi også peke på hvor malen vår og filene ligger. Dette legges under server-blokka i yaml-filen:
 
 ```
 server:
@@ -25,8 +24,11 @@ server:
     static: /pygeoapi/static # sti til statiske filer
 ```
 
-Start opp løsning som tidligere med 
-``` docker compose up -d``` 
+Start opp løsning som tidligere med
+
+```
+docker compose up -d
+```
 
 ## 5.2 Eksperimenter med templating (landing page, CSS og logo)
 
@@ -37,6 +39,7 @@ Start opp løsning som tidligere med
 ### Oppgave:
 
 `templates/` og `static/` ligger under `assets/`-mappen.
+
 - Endre på CSS i `static/css/default.css` for å tilpasse utseendet.
 - Bytt ut `organization_logo.png` under `static/img/` med din egen organisasjonslogo (men behold filnavnet).
 - Gå inn i `templates/`-mappen i løsningen. Finn filen `landing_page.html`.
@@ -62,7 +65,6 @@ Start opp løsning som tidligere med
   - Ser du andre endringer du vil gjøre, f.eks. legge til en tekst, endre overskrift, eller sett inn et bilde/logo fra `static/img/`?.
 - Lagre filene og last inn siden på nytt i nettleseren. (Du må kanskje restarte pygeoapi-containeren: `docker compose up -d`)
 
-
 ## 5.3 Oppsummering
 
 Med templating og statiske filer kan du tilpasse pygeoapi til å passe din organisasjon eller ditt prosjekt. Prøv deg frem og se hvor mye du kan endre på utseendet!
@@ -81,13 +83,13 @@ services:
     ports:
       - "5000:80"
     volumes:
-     - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
-     - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
-     - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer (bilder/ikoner, styling etc.)
+      - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
+      - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
+      - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer (bilder/ikoner, styling etc.)
     restart: unless-stopped
     depends_on:
-        postgis:
-          condition: service_healthy
+      postgis:
+        condition: service_healthy
     environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres
@@ -110,7 +112,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
 ```
 
 Filen pygeoapi_config.yml (i mappen config) skal se slik ut:
@@ -255,5 +256,6 @@ resources:
 ---
 
 **Ressurser for videre lesning:**
+
 - [pygeoapi docs: Customizing templates](https://docs.pygeoapi.io/en/latest/html-templating.html)
 - [Jinja template syntax](https://jinja.palletsprojects.com/en/stable/templates/)
