@@ -37,11 +37,30 @@ Start opp løsning som tidligere med
 ### Oppgave:
 
 `templates/` og `static/` ligger under `assets/`-mappen.
-- Gå inn i `templates/`-mappen i løsningen. Finn filen `landing_page.html`.
-- Gjør endringer i `landing_page.html` (f.eks. legg til en tekst, endre overskrift, eller sett inn et bilde/logo fra `static/img/`).
 - Endre på CSS i `static/css/default.css` for å tilpasse utseendet.
-- Bytt ut `organization_logo.png` med din egen organisasjonslogo (men behold filnavnet).
-- Lagre filene og last inn siden på nytt i nettleseren. (Du må kanskje restarte pygeoapi-containeren: `docker compose restart pygeoapi`)
+- Bytt ut `organization_logo.png` under `static/img/` med din egen organisasjonslogo (men behold filnavnet).
+- Gå inn i `templates/`-mappen i løsningen. Finn filen `landing_page.html`.
+  - Kan vi for eksempel flytte info om lisens og de andre lenkene til en egen boks under Contact Point?
+    ```
+        <div class="card">
+          <div class="card-header">
+              <b>{% trans %}Legal/Misc.{% endtrans %}</b>
+          </div>
+          <div class="card-body">
+            <div>
+              <b>{% trans %}License{% endtrans %}</b><br/>
+              <span><a href="{{ config['metadata']['license']['url'] }}">{{ config['metadata']['license']['name'] }}</a></span><br/>
+              <b>{% trans %}Terms of Service{% endtrans %}</b><br/>
+              <span><a href="{{ config['metadata']['identification']['terms_of_service'] }}">{{ config['metadata']['identification']['terms_of_service'] }}</a></span><br/>
+              <b>{% trans %}URL{% endtrans %}</b><br/>
+              <span><a href="{{ config['metadata']['identification']['url'] }}">{{ config['metadata']['identification']['url'] }}</a></span><br/>
+            </div>
+          </div>
+        </div>
+    ```
+  - Får du fjernet den opprinnelige boksen også?
+  - Ser du andre endringer du vil gjøre, f.eks. legge til en tekst, endre overskrift, eller sett inn et bilde/logo fra `static/img/`?.
+- Lagre filene og last inn siden på nytt i nettleseren. (Du må kanskje restarte pygeoapi-containeren: `docker compose up -d`)
 
 
 ## 5.3 Oppsummering
