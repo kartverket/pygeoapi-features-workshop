@@ -61,6 +61,8 @@ Du skal da få opp en side nettside som viser pygeoapi sin "html-visning". 🎉
 
 Klikk deg gjerne litt rundt!
 
+> 💡 **Tips:** Vi har lagt inn "fasit" nederst i hver øvelse.
+
 ## 1.4 Hva nå?
 
 Ser det bra ut?
@@ -79,7 +81,7 @@ Gå til [neste øving](oving2.md) så fikser vi det. 😃
 
 <details>
 <summary>Fasit</summary>
-Du skal nå ha en fil "docker-compose.yml" i hovedmappen in. (Mappen ett hakk over ovinger-mappen).
+Du skal nå ha en fil "docker-compose.yml" i hovedmappen. (Mappen ett hakk over ovinger-mappen).
 Innholdet i filen skal være:
 
 ```yml
@@ -93,3 +95,5 @@ services:
 ```
 
 </details>
+
+[neste øving](oving2.md)

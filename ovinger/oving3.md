@@ -64,8 +64,8 @@ Vi har selvfølgelig klart å gjøre en feil i oppsettet vårt. Klarer du å fin
 <details>
 <summary>Hint</summary>
 Fylker peker mot kommuner og kommuner peker mot fylker. Det er kansjke ikke så lurt.
-Kan sees om man eks. går til ```http://localhost:5000/collections/fylker/items```
-Dette er feil som må rettes opp i konfigurasjonsfilen pygeoapi_config.yml. 
+Kan sees om man eks. går til http://localhost:5000/collections/fylker/items
+Dette er feil som må rettes opp i konfigurasjonsfilen pygeoapi_config.yml.
 </details>
 
 Fiks feilene i filen og kjør:
@@ -248,3 +248,7 @@ resources:
 ```
 
 </details>
+
+Du er nå ferdig med det viktigste. I øvingene 4-7 ser vi litt mer på å bruke pygeoapi. De må ikke gjøres i kronologisk rekkefølge, så kikk gjerne gjennom de og vurder hva som er mest interressant.
+
+[øving 4](<oving4 - bonus>)

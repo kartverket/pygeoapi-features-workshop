@@ -19,7 +19,7 @@ Vil du kanskje gjøre noen endringer som å endre beskrivelser legge til keyword
 
 ## 4.3 Vis dataene i Qgis/Arcgis (ev. annet)
 
-💡 Dersom du ikke har Qgis eller arcgis installert kan du hoppe videre til [øving 5](oving5.md)
+💡 Dersom du ikke har Qgis eller arcgis installert kan du hoppe videre til [øving 5](oving5 - bonus.md)
 
 Du kan også koble deg opp til api'et med Qgis eller arcgis.
 
