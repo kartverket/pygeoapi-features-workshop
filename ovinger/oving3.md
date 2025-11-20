@@ -16,7 +16,7 @@ Gå til docker-compose filen og lim inn følgende for å spesifisere at configfi
 
 ```yml
 volumes:
-  - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml # Her spesifiserer vi at filen pygeoapi_config.yml i denne mappen skal importeres inn i containeren
+  - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
 ```
 
 <details>
@@ -103,6 +103,8 @@ services:
     container_name: postgis
     ports:
       - "5432:5432"
+    # For mac
+    platform: linux/amd64
     environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres

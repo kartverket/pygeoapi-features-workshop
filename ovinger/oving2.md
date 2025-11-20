@@ -20,7 +20,7 @@ Begynn med å lime inn følgende tekst helt nederst i docker compose filen:
 ```yml
 postgis:
   build:
-    context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
+    context: ./assets/postgis
   container_name: postgis
   ports:
     - "5432:5432"
@@ -75,11 +75,11 @@ Filen docker-compose.yml skal etter denne øvingen se slik ut:
 ```yml
 services:
   pygeoapi:
-    image: geopython/pygeoapi:latest # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi_ws # valgfritt, men det er fint å sette eget container navn
+    image: geopython/pygeoapi:latest
+    container_name: pygeoapi_ws
     ports:
-      - "5000:80" # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
-    restart: unless-stopped # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+      - "5000:80"
+    restart: unless-stopped
     depends_on:
       postgis:
         condition: service_healthy
@@ -92,10 +92,12 @@ services:
 
   postgis:
     build:
-      context: ./assets/postgis # Sti til postgismappen som inneholder en Dockerfile
+      context: ./assets/postgis
     container_name: postgis
     ports:
       - "5432:5432"
+    # For mac
+    platform: linux/amd64
     environment:
       - DB_NAME=administrative_enheter
       - POSTGRES_USER=postgres

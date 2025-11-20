@@ -84,8 +84,8 @@ services:
       - "5000:80"
     volumes:
       - ./config/pygeoapi_config.yml:/pygeoapi/local.config.yml
-      - ./assets/oving5 - templating/templates:/pygeoapi/templates # sti til egne maler
-      - ./assets/oving5 - templating/static:/pygeoapi/static # sti til egne statiske filer (bilder/ikoner, styling etc.)
+      - ./assets/oving5 - templating/templates:/pygeoapi/templates
+      - ./assets/oving5 - templating/static:/pygeoapi/static
     restart: unless-stopped
     depends_on:
       postgis:

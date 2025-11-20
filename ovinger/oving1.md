@@ -87,11 +87,11 @@ Innholdet i filen skal være:
 ```yml
 services:
   pygeoapi:
-    image: geopython/pygeoapi:latest # 'Sti' til image. Vi bruker 'latest' versjon her, men det er ofte lurt å spesifisere med versjonsnummer
-    container_name: pygeoapi_ws # valgfritt, men det er fint å sette eget container navn
+    image: geopython/pygeoapi:latest
+    container_name: pygeoapi_ws
     ports:
-      - "5000:80" # Her 'mappes' port 80 i containeren med port 5000 på pc'en din
-    restart: unless-stopped # Containeren restarter seg selv, med mindre den får en stopp-kommando. Eks. 'docker compose down'
+      - "5000:80"
+    restart: unless-stopped
 ```
 
 </details>
